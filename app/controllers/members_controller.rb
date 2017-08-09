@@ -4,7 +4,14 @@ class MembersController < ApplicationController
   # GET /members
   # GET /members.json
   def index
-    @members = Member.all
+    @members = if params[:query]
+      # to do sanitize query 
+      # to do option for basic search
+      # Member.where('name LIKE ?', "%#{params[:query]}%")
+      Member.search(params[:query])
+    else 
+      Member.all
+    end
   end
 
   # GET /members/1
@@ -69,6 +76,6 @@ class MembersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def member_params
-      params.fetch(:member, {}).permit(:username, :firstname, :lastname, :email, :bio)
+      params.fetch(:member, {}).permit(:username, :firstname, :lastname, :email, :bio, :query)
     end
 end
